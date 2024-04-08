@@ -1,0 +1,50 @@
+{
+  "branches": ["master","main"],
+  "plugins": [
+    "commit-analyzer-fail-on-no-release",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/github",
+      {
+        "githubUrl": "https://github.com/B-Interactive/cloudflare-stream-wordpress",
+        "assets": [
+        { "path": "CHANGELOG.md", "label": "Changelog" }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    [
+      "@google/semantic-release-replace-plugin",
+      {
+        "replacements": [
+          {
+            "files": ["cloudflare-stream.php"],
+            "from": "\\* Version: .*",
+            "to": "* Version: ${nextRelease.version}",
+            "results": [
+              {
+                "file": "cloudflare-stream.php",
+                "hasChanged": true,
+                "numMatches": 1,
+                "numReplacements": 1
+              }
+            ],
+            "countMatches": true
+          }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["cloudflare-stream.php", "CHANGELOG.md"],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ]
+  ]
+}
